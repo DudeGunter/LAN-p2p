@@ -21,7 +21,7 @@ async def listen(reader, writer):
     data = await reader.read(100)
     message = data.decode()
 
-    print(f"PEER > {message!r}")
+    print(f"\nPEER > {message!r}")
     
     #print("Close connection")
     #writer.close()
