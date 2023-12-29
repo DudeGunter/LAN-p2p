@@ -1,22 +1,7 @@
 import asyncio
 from aioconsole import ainput
 
-# Echo the response and closes the connection with client after
-async def handle_echo(reader, writer):
-    data = await reader.read(100)
-    message = data.decode()
-    addr = writer.get_extra_info('peername')
-
-    print(f"Received {message!r} from {addr!r}")
-
-    print(f"Send: {message!r}")
-    writer.write(data)
-    await writer.drain()
-    
-    print("Close the connection")
-    writer.close()
-    await writer.wait_closed()
-
+# Servers main function to constantly listen for information
 async def listen(reader, writer):
     data = await reader.read(100)
     message = data.decode()
@@ -27,11 +12,12 @@ async def listen(reader, writer):
     #writer.close()
     #await writer.wait_closed()
     
+# Used to get input live while able to print text specifically for the client
 async def live_input():
-    content = await ainput(">")
+    content = await ainput("\n>")
     return content
 
-# ADDED
+# Client used to send info to peer's server
 async def client(): 
     while True:
         try:
@@ -49,9 +35,6 @@ async def client():
         msg = await live_input()
         writer.write(msg.encode())
         await writer.drain()
-        
-
-
 
 # was main():, trying to do multiple tasks at same time
 async def server():
