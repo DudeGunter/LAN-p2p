@@ -6,7 +6,7 @@ async def listen(reader, writer):
     while True:
         data = await reader.read(100)
         message = data.decode()
-        print(f"\n> {message!r}")
+        print(f"\n> {message}")
     
     #print("Close connection")
     #writer.close()
@@ -21,7 +21,7 @@ async def live_input():
 async def client(): 
     while True:
         try:
-            reader, writer = await asyncio.open_connection('192.168.1.48', 8888)
+            reader, writer = await asyncio.open_connection('127.0.0.1', 8888)
             break
         except ConnectionRefusedError:
             print("Refused")
@@ -40,7 +40,7 @@ async def client():
 async def server():
     print("Server Start")
     server = await asyncio.start_server(
-        listen, '192.168.1.60', 8888)
+        listen, 'localhost', 8888)
 
     addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
     print(f'Serving on {addrs}')
