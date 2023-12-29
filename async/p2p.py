@@ -7,10 +7,7 @@ async def listen(reader, writer):
         data = await reader.read(100)
         message = data.decode()
         print(f"\n> {message}")
-    
-    #print("Close connection")
-    #writer.close()
-    #await writer.wait_closed()
+
     
 # Used to get input live while able to print text specifically for the client
 async def live_input():
@@ -36,7 +33,7 @@ async def client():
         writer.write(msg.encode())
         await writer.drain()
 
-# was main():, trying to do multiple tasks at same time
+# trying to do multiple tasks at same time
 async def server():
     print("Server Start")
     server = await asyncio.start_server(
