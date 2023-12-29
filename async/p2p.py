@@ -3,10 +3,10 @@ from aioconsole import ainput
 
 # Servers main function to constantly listen for information
 async def listen(reader, writer):
-    data = await reader.read(100)
-    message = data.decode()
-
-    print(f"\nPEER > {message!r}")
+    while True:
+        data = await reader.read(100)
+        message = data.decode()
+        print(f"\n> {message!r}")
     
     #print("Close connection")
     #writer.close()
@@ -14,14 +14,14 @@ async def listen(reader, writer):
     
 # Used to get input live while able to print text specifically for the client
 async def live_input():
-    content = await ainput("\n>")
+    content = await ainput("")
     return content
 
 # Client used to send info to peer's server
 async def client(): 
     while True:
         try:
-            reader, writer = await asyncio.open_connection('127.0.0.1', 8888)
+            reader, writer = await asyncio.open_connection('192.168.1.48', 8888)
             break
         except ConnectionRefusedError:
             print("Refused")
@@ -40,7 +40,7 @@ async def client():
 async def server():
     print("Server Start")
     server = await asyncio.start_server(
-        listen, 'localhost', 8888)
+        listen, '192.168.1.60', 8888)
 
     addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
     print(f'Serving on {addrs}')
