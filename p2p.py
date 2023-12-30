@@ -6,7 +6,14 @@ async def listen(reader, writer):
     while True:
         data = await reader.read(100)
         message = data.decode()
-        print(f"\n> {message}")
+        print(f"> {message}")
+        if message == "exit":
+            print("Closing server process")
+            writer.close()
+            await writer.wait_closed()
+            break
+    print("Listen end")
+    
 
     
 # Used to get input live while able to print text specifically for the client
@@ -32,6 +39,12 @@ async def client():
         msg = await live_input()
         writer.write(msg.encode())
         await writer.drain()
+        if msg == "exit":
+            print("Closing client process")
+            writer.close()
+            await writer.wait_closed()
+            break
+    print("Client end")
 
 # trying to do multiple tasks at same time
 async def server():
@@ -41,12 +54,15 @@ async def server():
 
     addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
     print(f'Serving on {addrs}')
-
-    async with server:
-        await server.serve_forever()
+    print("Server end")
 
 async def main():
     tasks = await asyncio.gather(server(), client())
-    print("\nEnd:")
 
-asyncio.run(main())
+
+if __name__ == "__main__":
+    import time
+    s = time.perf_counter()
+    asyncio.run(main())
+    elapsed = time.perf_counter() - s
+    print(f"{__file__} executed in {elapsed:0.2f} seconds.")
