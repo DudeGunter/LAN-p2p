@@ -22,10 +22,10 @@ async def live_input():
     return content
 
 # Client used to send info to peer's server
-async def client(): 
+async def client(ip): 
     while True:
         try:
-            reader, writer = await asyncio.open_connection('127.0.0.1', 8888)
+            reader, writer = await asyncio.open_connection(ip, 8888)
             break
         except ConnectionRefusedError:
             print("Refused")
@@ -54,15 +54,17 @@ async def server():
 
     addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
     print(f'Serving on {addrs}')
-    print("Server end")
 
-async def main():
-    tasks = await asyncio.gather(server(), client())
+async def main(ip='127.0.0.1'):
+    tasks = await asyncio.gather(server(), client(ip))
 
 
 if __name__ == "__main__":
     import time
     s = time.perf_counter()
-    asyncio.run(main())
+    print("Enter peers ip:")
+    ip = input()
+    print(ip)
+    asyncio.run(main(ip))
     elapsed = time.perf_counter() - s
     print(f"{__file__} executed in {elapsed:0.2f} seconds.")
