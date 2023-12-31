@@ -47,24 +47,28 @@ async def client(ip):
     print("Client end")
 
 # trying to do multiple tasks at same time
-async def server():
+async def server(ip):
     print("Server Start")
     server = await asyncio.start_server(
-        listen, 'localhost', 8888)
+        listen, ip, 8888)
 
     addrs = ', '.join(str(sock.getsockname()) for sock in server.sockets)
     print(f'Serving on {addrs}')
 
-async def main(ip='127.0.0.1'):
-    tasks = await asyncio.gather(server(), client(ip))
+async def main(peerip, hostip):
+    tasks = await asyncio.gather(server(hostip), client(peerip))
 
 
 if __name__ == "__main__":
     import time
     s = time.perf_counter()
     print("Enter peers ip:")
-    ip = input()
-    print(ip)
-    asyncio.run(main(ip))
+    peerip = input()
+    print("Enter host ip:")
+    hostip = input()
+    asyncio.run(main(peerip, hostip))
     elapsed = time.perf_counter() - s
     print(f"{__file__} executed in {elapsed:0.2f} seconds.")
+
+# 192.168.1.54
+# 192.168.75.130
