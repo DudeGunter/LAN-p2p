@@ -4,7 +4,10 @@ from aioconsole import ainput
 # Servers main function to constantly listen for information
 async def listen(reader, writer):
     while True:
-        data = await reader.read(100)
+        try:
+            data = await reader.read(100)
+        except:
+            break
         message = data.decode()
         print(f"> {message}")
         if message == "exit":
@@ -71,4 +74,4 @@ if __name__ == "__main__":
     print(f"{__file__} executed in {elapsed:0.2f} seconds.")
 
 # 192.168.1.54
-# 192.168.75.130
+# 192.168.75.134
